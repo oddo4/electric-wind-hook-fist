@@ -5,8 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Mice"
         mc:Ignorable="d"
-        Title="MainWindow" Height="525" Width="260" ResizeMode="NoResize">
-    <Grid>
-        <Frame Source="Pages/MainPage.xaml" NavigationUIVisibility="Hidden"/>
-    </Grid>
+        Title="MainWindow" Height="525" Width="300" ResizeMode="NoResize">
+    <Frame Source="Pages/MainPage.xaml" NavigationUIVisibility="Hidden"/>
 </Window>

@@ -13,5 +13,6 @@ namespace Mice
     /// </summary>
     public partial class App : Application
     {
+        private System.Windows.Forms.NotifyIcon notifyIcon;
     }
 }

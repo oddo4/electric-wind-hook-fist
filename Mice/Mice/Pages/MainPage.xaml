@@ -5,26 +5,37 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Mice.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="525" d:DesignWidth="260"
+      d:DesignHeight="525" d:DesignWidth="300"
       Title="MainPage">
 
     <StackPanel Background="White">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10">
             <Label Content="Settings of:" HorizontalAlignment="Right" VerticalAlignment="Center"/>
             <ComboBox HorizontalAlignment="Center" VerticalAlignment="Center" Width="120" IsEditable="True" ItemsSource="{Binding SettingsList}"/>
+            <Button Content="+" Height="20" Width="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,2,0" Command="{Binding }"/>
+            <Button Content="-" Height="20" Width="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,2,0"/>
         </StackPanel>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10">
             <StackPanel Margin="0,5">
-                <Label Content="Mouse speed: " HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <Slider Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" Value="{Binding MouseSpeedValue}" Maximum="20" Minimum="1"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Label Content="Mouse speed: " HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Label Content="{Binding MouseSpeedValue}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </StackPanel>
+                <Slider Width="200" HorizontalAlignment="Center" VerticalAlignment="Center" Value="{Binding MouseSpeedValue}" Maximum="20" Minimum="1"/>
             </StackPanel>
             <StackPanel Margin="0,5">
-                <Label Content="Double Click Speed: " HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <Slider Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" Value="{Binding DoubleClickSpeed}" Maximum="0" Minimum="0"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Label Content="Double Click Speed: " HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Label Content="{Binding DoubleClickSpeed}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </StackPanel>
+                <Slider Width="200" HorizontalAlignment="Center" VerticalAlignment="Center" Value="{Binding DoubleClickSpeed}" Maximum="1000" Minimum="0" IsSnapToTickEnabled="True" TickFrequency="100"/>
             </StackPanel>
             <StackPanel Margin="0,5">
-                <Label Content="Scroll Wheel speed: " HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <Slider Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" Value="{Binding ScrollWheelSpeed}" Maximum="0" Minimum="0"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Label Content="Scroll Wheel speed: " HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Label Content="{Binding ScrollWheelSpeed}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </StackPanel>
+                <Slider Width="200" HorizontalAlignment="Center" VerticalAlignment="Center" Value="{Binding ScrollWheelSpeed}" Maximum="50" Minimum="0"/>
             </StackPanel>
         </StackPanel>
         
