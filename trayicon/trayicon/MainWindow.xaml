@@ -1,0 +1,21 @@
+﻿<Window x:Class="trayicon.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:trayicon"
+        mc:Ignorable="d"
+        WindowState="{Binding WindowState}"
+        Title="MainWindow" Height="350" Width="525">
+    <Viewbox>
+        <Grid Background="White" Height="350" Width="525">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="10*"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+            <Image Source="/Resources/waldobody.png" Grid.Row="1"/>
+            <TextBlock Text="You found me!" HorizontalAlignment="Center" FontSize="32" Grid.Row="2"/>
+        </Grid>
+    </Viewbox>
+</Window>

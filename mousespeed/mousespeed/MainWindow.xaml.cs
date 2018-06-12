@@ -1,5 +1,4 @@
-﻿using Mice.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,16 +13,19 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Mice
+namespace mousespeed
 {
     /// <summary>
     /// Interakční logika pro MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        private MainWindowViewModel viewModel = new MainWindowViewModel();
+
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = viewModel;
         }
     }
 }
