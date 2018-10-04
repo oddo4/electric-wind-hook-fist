@@ -1,0 +1,30 @@
+﻿<Page x:Class="test_20180619.Pages.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:test_20180619.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="350" d:DesignWidth="525
+      "
+      Title="MainPage">
+    <Grid Background="White">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <ListView Height="250" Width="350" ItemsSource="{Binding PersonsList}" SelectedItem="{Binding SelectedPerson}" Margin="0,5">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Jméno" DisplayMemberBinding="{Binding Firstname}"/>
+                        <GridViewColumn Header="Příjmení" DisplayMemberBinding="{Binding Surname}"/>
+                        <GridViewColumn Header="Telefon" DisplayMemberBinding="{Binding ContactInfo.PhoneNumber}"/>
+                        <GridViewColumn Header="Email" DisplayMemberBinding="{Binding ContactInfo.Email}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Přidat" Width="80" Command="{Binding AddPersonCommand}" Margin="5,5"/>
+                <Button Content="Editovat" Width="80" Command="{Binding EditPersonCommand}" Margin="5,5"/>
+                <Button Content="Smazat" Width="80" Command="{Binding DeletePersonCommand}" Margin="5,5"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

@@ -7,29 +7,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mice.Classes
+namespace test_20180619.Classes
 {
-    class JsonHelper
+    public class JsonHelper
     {
         private string fileName;
         private string extension = ".json";
-
+        
         public JsonHelper(string fileName)
         {
             this.fileName = fileName;
         }
 
-        public ObservableCollection<MouseSettings> ReadFile()
+        public ObservableCollection<Person> ReadFile()
         {
-            ObservableCollection<MouseSettings> col = new ObservableCollection<MouseSettings>();
+            ObservableCollection<Person> col = new ObservableCollection<Person>();
             try
             {
                 string fileString = File.ReadAllText(fileName + extension);
-                var result = JsonConvert.DeserializeObject<List<MouseSettings>>(fileString);
+                var result = JsonConvert.DeserializeObject<List<Person>>(fileString);
 
-                foreach (MouseSettings item in result)
+                foreach (Person data in result)
                 {
-                    col.Add(item);
+                    col.Add(data);
                 }
 
                 return col;
@@ -41,12 +41,12 @@ namespace Mice.Classes
             return col;
         }
 
-        public bool WriteFile(ObservableCollection<MouseSettings> list)
+        public bool WriteFile(ObservableCollection<Person> col)
         {
             try
             {
-                string fileString = JsonConvert.SerializeObject(list);
-                File.WriteAllText(fileName + extension, fileString);
+                string json = JsonConvert.SerializeObject(col);
+                File.WriteAllText(fileName + extension, json);
 
                 return true;
             }
