@@ -8,12 +8,18 @@ namespace minesweeper
 {
     class Square
     {
-        public bool Bomb { get; set; }
-        public Mark MarkStatus { get; set; }
+        public bool Bomb = false;
+        public int NearValue = 0;
+        public bool Mark = false;
 
         public Square()
         {
-            
+
+        }
+
+        public void AddValue()
+        {
+            NearValue += 1;
         }
     }
 }

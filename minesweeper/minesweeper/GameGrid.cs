@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -15,7 +16,7 @@ namespace minesweeper
         public int SizeX { get; set; }
         public int SizeY { get; set; }
         public int MineCount { get; set; }
-        public List<List<Square>> SquareList { get; set; }
+        public List<List<Square>> SquareList = new List<List<Square>>();
 
         public GameGrid(int sizeX, int sizeY, int mineCount)
         {
@@ -37,7 +38,7 @@ namespace minesweeper
                 for (int j = 0; j < SizeY; j++)
                 {
                     Square square = new Square();
-                    if (rand.Next(0, (int)Math.Round((double)MineCount/2)) == 0 && ctr < MineCount)
+                    if (rand.Next(0, (int)Math.Round((double)50/2)) == 0 && ctr < MineCount)
                     {
                         square.Bomb = true;
                         ctr++;
@@ -108,22 +109,33 @@ namespace minesweeper
             {
                 for (int j = 0; j < SizeY; j++)
                 {
-                    Brush color;
+                    Brush color = Brushes.AliceBlue;
                     if (SquareList[i][j].Bomb)
                     {
                         color = Brushes.Red;
+                        //AddValueAround(i, j);
                     }
-                    else
+
+                    Button block = new Button() { Background = color, Content = SquareList[i][j].NearValue };
+
+                    Grid.SetRow(block, i);
+                    Grid.SetColumn(block, j);
+
+                    grid.Children.Add(block);
+                }
+            }
+        }
+
+        private void AddValueAround(int PosX, int PosY)
+        {
+            for (int i = PosX - 1; i < PosX + 2; i++)
+            {
+                for (int j = PosY - 1; j < PosY + 2; j++)
+                {
+                    if ((i >= 0 && i <= SizeX-1) && (j >= 0 && j <= SizeY-1))
                     {
-                        color = Brushes.Green;
+                        SquareList[i][j].AddValue();
                     }
-
-                    Rectangle rect = new Rectangle() { Fill = color };
-
-                    Grid.SetRow(rect, i);
-                    Grid.SetColumn(rect, j);
-
-                    grid.Children.Add(rect);
                 }
             }
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +24,24 @@ namespace minesweeper
         public MainPage()
         {
             InitializeComponent();
-            this.DataContext = new MainPageViewModel(MainGrid);
+            GameGrid gameGrid = new GameGrid(8, 8, 1);
+
+            gameGrid.CreateGrid(MainGrid);
+            gameGrid.SetElementsInGrid(MainGrid);
+            SetClickEvents();
+            Debug.WriteLine(MainGrid.Children.Count);
+        }
+        private void SetClickEvents()
+        {
+            foreach(UIElement item in MainGrid.Children)
+            {
+                ((Button)item).Click += ShowBlock_Click;
+            }
+        }
+
+        private void ShowBlock_Click(object sender, RoutedEventArgs e)
+        {
+            ((Button)sender).IsEnabled = false;
         }
     }
 }
