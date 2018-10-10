@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -21,13 +22,15 @@ namespace minesweeper
     /// </summary>
     public partial class MainPage : Page
     {
+        GameGrid gameGrid;
+        List<List<Button>> blocksList = new List<List<Button>>();
         public MainPage()
         {
             InitializeComponent();
-            GameGrid gameGrid = new GameGrid(8, 8, 1);
+            gameGrid = new GameGrid(8, 8, 10);
 
             gameGrid.CreateGrid(MainGrid);
-            gameGrid.SetElementsInGrid(MainGrid);
+            gameGrid.SetElementsInGrid(MainGrid, blocksList);
             SetClickEvents();
             Debug.WriteLine(MainGrid.Children.Count);
         }
@@ -36,12 +39,23 @@ namespace minesweeper
             foreach(UIElement item in MainGrid.Children)
             {
                 ((Button)item).Click += ShowBlock_Click;
+                ((Button)item).MouseRightButtonDown += MarkBlock_Click;
             }
         }
 
         private void ShowBlock_Click(object sender, RoutedEventArgs e)
         {
-            ((Button)sender).IsEnabled = false;
+            gameGrid.ShowValue((Button)sender, blocksList);
+
+        }
+
+        private void MarkBlock_Click(object sender, MouseButtonEventArgs e)
+        {
+            int X = Grid.GetRow((Button)sender);
+            int Y = Grid.GetColumn((Button)sender);
+            Square block = gameGrid.SquareList[X][Y];
+            block.SetMark();
+            gameGrid.ShowMark(((Button)sender), block.Mark);
         }
     }
 }

@@ -74,7 +74,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="GameGrid.cs" />
-    <Compile Include="MainPageViewModel.cs" />
     <Compile Include="Mark.cs" />
     <Compile Include="Square.cs" />
     <Page Include="MainPage.xaml">

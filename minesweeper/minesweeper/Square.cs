@@ -21,5 +21,15 @@ namespace minesweeper
         {
             NearValue += 1;
         }
+
+        public bool IsBomb()
+        {
+            return Bomb;
+        }
+
+        public void SetMark()
+        {
+            Mark = !Mark;
+        }
     }
 }
