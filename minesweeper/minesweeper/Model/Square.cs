@@ -4,32 +4,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace minesweeper
+namespace minesweeper.Model
 {
     class Square
     {
         public bool Bomb = false;
         public int NearValue = 0;
         public bool Mark = false;
-
-        public Square()
-        {
-
-        }
+        public bool Covered = true;
+        public int PosX { get; set; }
+        public int PosY { get; set; }
 
         public void AddValue()
         {
             NearValue += 1;
         }
 
-        public bool IsBomb()
-        {
-            return Bomb;
-        }
-
-        public void SetMark()
+        public int SetMark(int Marked)
         {
             Mark = !Mark;
+
+            if(Mark)
+            {
+                Marked++;
+            }
+            else
+            {
+                Marked--;
+            }
+
+            return Marked;
         }
     }
 }

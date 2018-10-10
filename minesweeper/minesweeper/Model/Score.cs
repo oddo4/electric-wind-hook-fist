@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace minesweeper
+namespace minesweeper.Model
 {
-    class Mark
+    public class Score
     {
-        public int CurrentMark { get; set; }
+        public int Difficulty { get; set; }
+        public int Time { get; set; }
     }
 }

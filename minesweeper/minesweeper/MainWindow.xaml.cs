@@ -1,4 +1,6 @@
-﻿using System;
+﻿using minesweeper.Model;
+using minesweeper.View;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,9 @@ namespace minesweeper
         public MainWindow()
         {
             InitializeComponent();
+            App.MainWindow = this;
+            NavigationServiceSingleton.CreateNavigationService(MainFrame);
+            NavigationServiceSingleton.GetNavigationService().NavigateToPage(new GamePage());
         }
     }
 }
