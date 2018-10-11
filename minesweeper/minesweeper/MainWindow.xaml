@@ -6,5 +6,5 @@
         xmlns:local="clr-namespace:minesweeper"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Frame x:Name="MainFrame" Source="" NavigationUIVisibility="Hidden"/>
+    <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
 </Window>

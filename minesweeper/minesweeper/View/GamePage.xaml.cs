@@ -30,7 +30,7 @@ namespace minesweeper.View
         int Difficulty;
         int Tick = 0;
         int Marked = 0;
-        public GamePage(int X = 9, int Y = 9, int MineCount = 2, int Difficulty = 0)
+        public GamePage(int X = 9, int Y = 9, int MineCount = 4, int Difficulty = 0)
         {
             InitializeComponent();
             gameGrid = new GameGrid(X, Y, MineCount);
