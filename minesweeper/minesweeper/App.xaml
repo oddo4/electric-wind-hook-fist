@@ -40,6 +40,9 @@
                     <Setter Property="Foreground" Value="Brown"/>
                 </Trigger>
                 <Trigger Property="Content" Value="6">
+                    <Setter Property="Foreground" Value="Cyan"/>
+                </Trigger>
+                <Trigger Property="Content" Value="7">
                     <Setter Property="Foreground" Value="Black"/>
                 </Trigger>
                 <Trigger Property="Content" Value="8">
