@@ -18,9 +18,10 @@ namespace minesweeper.Model
         public int SizeX { get; set; }
         public int SizeY { get; set; }
         public int MineCount { get; set; }
-        public List<List<Square>> SquareList = new List<List<Square>>();
+        public List<Square> SquareList = new List<Square>();
         public bool GameOver = false;
         public bool Won = false;
+        public bool Start = false;
         public ObservableCollection<Score> HighScoreCol = new ObservableCollection<Score>();
 
         public GameGrid(int sizeX, int sizeY, int mineCount)
@@ -28,49 +29,46 @@ namespace minesweeper.Model
             SizeX = sizeX;
             SizeY = sizeY;
             MineCount = mineCount;
-            SquareList = new List<List<Square>>();
-            Random rand = new Random();
+            SquareList = new List<Square>();
             CreateSquareList();
-            SetBombs(rand);
         }
 
         private void CreateSquareList()
         {
             for (int i = 0; i < SizeX; i++)
             {
-                List<Square> squareRow = new List<Square>();
-
                 for (int j = 0; j < SizeY; j++)
                 {
                     Square square = new Square() { PosX = i, PosY = j };
-                    squareRow.Add(square);
+
+                    SquareList.Add(square);
                 }
-                SquareList.Add(squareRow);
             }
         }
 
-        private void SetBombs(Random rand)
+        private void SetBombs(Random rand, Square square)
         {
             int ctr = 0;
+
             while (ctr < MineCount)
             {
-                for (int i = 0; i < SizeX; i++)
+                var i = rand.Next(0, (SizeX * SizeY) - 1);
+                var current = SquareList[i];
+
+                if (!current.Bomb)
                 {
-                    List<Square> squareRow = new List<Square>();
-
-                    for (int j = 0; j < SizeY; j++)
+                    if (current.PosX != square.PosX || current.PosY != square.PosY)
                     {
-                        if (rand.Next(0, (int)Math.Round((double)SizeX * SizeY)) == 0)
-                        {
-                            SquareList[i][j].Bomb = true;
-                            ctr++;
-                        }
+                        current.Bomb = true;
+                        AddValueAround(current.PosX, current.PosY);
 
-                        if (ctr >= MineCount)
-                        {
-                            return;
-                        }
+                        ctr++;
                     }
+                }
+
+                if (ctr >= MineCount)
+                {
+                    break;
                 }
             }
         }
@@ -104,14 +102,7 @@ namespace minesweeper.Model
                 List<Button> row = new List<Button>();
                 for (int j = 0; j < SizeY; j++)
                 {
-                    //Brush color = Brushes.AliceBlue;
-                    if (SquareList[i][j].Bomb)
-                    {
-                        //color = Brushes.Red;
-                        AddValueAround(i, j);
-                    }
-
-                    Button block = new Button();// { Background = color };
+                    Button block = new Button();
 
                     Grid.SetRow(block, i);
                     Grid.SetColumn(block, j);
@@ -131,7 +122,7 @@ namespace minesweeper.Model
                 {
                     if ((i >= 0 && i <= SizeX-1) && (j >= 0 && j <= SizeY-1))
                     {
-                        SquareList[i][j].AddValue();
+                        SquareList.First(x => x.PosX == i && x.PosY == j).AddValue();
                     }
                 }
             }
@@ -140,8 +131,15 @@ namespace minesweeper.Model
         {
             int PosX = Grid.GetRow(clicked);
             int PosY = Grid.GetColumn(clicked);
-            Square current = SquareList[PosX][PosY];
+            Square current = SquareList.First(s => s.PosX == PosX && s.PosY == PosY);
             current.Covered = false;
+
+            if (!Start)
+            {
+                Start = true;
+                Random rand = new Random();
+                SetBombs(rand, current);
+            }
 
             if (!current.Mark && current.Bomb)
             {
@@ -190,9 +188,10 @@ namespace minesweeper.Model
                 {
                     if ((i >= 0 && i <= SizeX - 1) && (j >= 0 && j <= SizeY - 1))
                     {
-                        if (!SquareList[i][j].Mark && SquareList[i][j].Covered)
+                        var square = SquareList.First(s => s.PosX == i && s.PosY == j);
+                        if (!square.Mark && square.Covered)
                         {
-                            blocksToCheck.Add(SquareList[i][j]);
+                            blocksToCheck.Add(square);
                         }
                     }
                 }
@@ -203,15 +202,12 @@ namespace minesweeper.Model
 
         private void UpdateBlocksList(List<List<Button>> blocksList)
         {
-            foreach(List<Square> row in SquareList)
+            foreach (Square square in SquareList)
             {
-                foreach (Square square in row)
+                if (!square.Covered)
                 {
-                    if (!square.Covered)
-                    {
-                        blocksList[square.PosX][square.PosY].Content = square.NearValue.ToString().Replace("0", "");
-                        blocksList[square.PosX][square.PosY].IsEnabled = square.Covered;
-                    }
+                    blocksList[square.PosX][square.PosY].Content = square.NearValue.ToString().Replace("0", "");
+                    blocksList[square.PosX][square.PosY].IsEnabled = square.Covered;
                 }
             }
         }
@@ -237,31 +233,22 @@ namespace minesweeper.Model
             var list = new List<Square>();
             int bomb = 0;
             bool won = true;
-            foreach (List<Square> row in SquareList)
+            foreach (Square square in SquareList)
             {
-                list.AddRange(row.Where(x => x.Covered == true));
-                bomb += row.Count(x => x.Bomb == true);
+                if (square.Covered)
+                    list.Add(square);
+
+                if (square.Bomb)
+                    bomb++;
             }
 
-            if ((list.Count == MineCount && bomb == list.Count) || endGame)
+            if ((list.Count == MineCount && bomb == list.Count) || endGame) // blocksList[square.PosX][square.PosY]
             {    
-                foreach(List<Square> row in SquareList)
+                foreach (Square square in SquareList)
                 {
-                    foreach (Square square in row)
+                    if (list.Count(s => s.Bomb == true) != MineCount && (square.Bomb && !square.Mark))
                     {
-
-                    }
-                }
-
-                foreach (Square square in list)
-                {
-                    if (square.Bomb)
-                    {
-                        ShowBomb(blocksList[square.PosX][square.PosY]);
-                    }
-                    else if (square.Bomb && square.Mark)
-                    {
-                        ShowMark(blocksList[square.PosX][square.PosY], true);
+                        won = false;
                     }
                 }
                 EndGame(true, blocksList, won);
@@ -271,26 +258,28 @@ namespace minesweeper.Model
         public void OpenRemainingBlocks(List<List<Button>> blocksList)
         {
             bool endGame = true;
-            foreach (List<Square> row in SquareList)
+            foreach (Square square in SquareList)
             {
-                foreach (Square square in row)
+                if (square.Covered)
                 {
-                    if (square.Covered)
+                    if (!square.Mark && square.Bomb)
                     {
-                        if (!square.Mark && square.Bomb)
-                        {
-                            blocksList[square.PosX][square.PosY].Background = Brushes.Red;
-                            ShowBomb(blocksList[square.PosX][square.PosY]);
-                            endGame = false;
-                        }
-                        else if (square.Mark && square.Bomb)
-                        {
-                            ShowBomb(blocksList[square.PosX][square.PosY], "❌");
-                        }
-                        else
-                        {
-                            ShowValue(blocksList[square.PosX][square.PosY], blocksList);
-                        }
+                        blocksList[square.PosX][square.PosY].Background = Brushes.Red;
+                        ShowBomb(blocksList[square.PosX][square.PosY]);
+                        endGame = false;
+                    }
+                    else if (square.Mark && square.Bomb)
+                    {
+                        ShowBomb(blocksList[square.PosX][square.PosY], "❌");
+                    }
+                    else if (square.Mark && !square.Bomb)
+                    {
+                        ShowMark(blocksList[square.PosX][square.PosY], true);
+                    }
+                    else
+                    {
+                        ShowValue(blocksList[square.PosX][square.PosY], blocksList);
+                        square.Covered = false;
                     }
                 }
             }
@@ -307,22 +296,23 @@ namespace minesweeper.Model
                     Won = true;
                     GameOver = true;
                 }
-                else
+                foreach (Square square in SquareList)
                 {
-                    foreach (List<Square> row in SquareList)
+                    if (square.Mark && square.Bomb && !won)
                     {
-                        foreach (Square square in row)
+                        ShowBomb(blocksList[square.PosX][square.PosY], "❌");
+                    }
+                    else if (!square.Mark && square.Bomb)
+                    {
+                        if (won)
                         {
-                            if (!square.Mark && square.Bomb)
-                            {
-                                ShowBomb(blocksList[square.PosX][square.PosY]);
-                                GameOver = true;
-                            }
-                            else if (square.Mark && square.Bomb)
-                            {
-                                ShowBomb(blocksList[square.PosX][square.PosY], "❌");
-                            }
+                            ShowMark(blocksList[square.PosX][square.PosY], true);
                         }
+                        else
+                        {
+                            ShowBomb(blocksList[square.PosX][square.PosY]);
+                        }
+                        GameOver = true;
                     }
                 }
             }

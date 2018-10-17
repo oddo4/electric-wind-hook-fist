@@ -45,6 +45,9 @@
                 <Trigger Property="Content" Value="8">
                     <Setter Property="Foreground" Value="Gray"/>
                 </Trigger>
+                <Trigger Property="Content" Value="❌">
+                    <Setter Property="Foreground" Value="Red"/>
+                </Trigger>
             </Style.Triggers>
         </Style>
     </Application.Resources>

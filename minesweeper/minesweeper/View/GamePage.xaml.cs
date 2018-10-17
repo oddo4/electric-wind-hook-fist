@@ -30,7 +30,7 @@ namespace minesweeper.View
         int Difficulty;
         int Tick = 0;
         int Marked = 0;
-        public GamePage(int X = 9, int Y = 9, int MineCount = 4, int Difficulty = 0)
+        public GamePage(int X = 9, int Y = 9, int MineCount = 60, int Difficulty = 0)
         {
             InitializeComponent();
             gameGrid = new GameGrid(X, Y, MineCount);
@@ -50,7 +50,7 @@ namespace minesweeper.View
 
                 App.JsonHelper.WriteFile(col);
             }
-            HighScoreListView.ItemsSource = gameGrid.HighScoreCol.OrderByDescending(x => x.Time).ToList();
+            HighScoreListView.ItemsSource = gameGrid.HighScoreCol.OrderBy(x => x.Time).ToList();
             Mines.Content = MineCount.ToString().PadLeft(3, '0');
 
             gameGrid.CreateGrid(MainGrid);
@@ -81,34 +81,51 @@ namespace minesweeper.View
                 Timer.Tick += new EventHandler(TimeTick);
                 Timer.Start();
             }
-                
-            if(!gameGrid.GameOver)
+
+            if (!gameGrid.GameOver)
             {
                 gameGrid.ShowValue((Button)sender, blocksList);
                 gameGrid.CheckRemainingBlocks(blocksList);
 
-                if(gameGrid.Won)
+                if (gameGrid.Won)
                 {
                     Mines.Content = "000";
                     CreateHighScore();
+
+                    ShowGameOver(true);
+                }
+                else if (gameGrid.GameOver)
+                {
+                    ShowGameOver(false);
                 }
             }
-
-
-            //if(gameGrid.)
-
         }
 
         private void CreateHighScore()
         {
-            Score score = new Score() { Time = Tick, Difficulty = Difficulty };
+            Score newScore = new Score() { Time = Tick, Difficulty = Difficulty };
 
-            gameGrid.HighScoreCol.Add(score);
+            gameGrid.HighScoreCol.Add(newScore);
+
+            if (gameGrid.HighScoreCol.Count > 10)
+            {
+                var orderedList = gameGrid.HighScoreCol.OrderBy(x => x.Time).ToList();
+                gameGrid.HighScoreCol.Clear();
+                foreach (Score score in orderedList)
+                {
+                    gameGrid.HighScoreCol.Add(score);
+                }
+
+                gameGrid.HighScoreCol.RemoveAt(gameGrid.HighScoreCol.Count - 1);
+            }
+
+            
 
             var oldData = App.JsonHelper.ReadFile();
             oldData[Difficulty] = gameGrid.HighScoreCol;
 
             App.JsonHelper.WriteFile(oldData);
+            HighScoreListView.ItemsSource = gameGrid.HighScoreCol.OrderBy(x => x.Time).ToList();
         }
 
         private void SetDifficulty_Click(object sender, RoutedEventArgs e)
@@ -148,7 +165,7 @@ namespace minesweeper.View
             {
                 int X = Grid.GetRow((Button)sender);
                 int Y = Grid.GetColumn((Button)sender);
-                Square block = gameGrid.SquareList[X][Y];
+                Square block = gameGrid.SquareList.First(s => s.PosX == X && s.PosY == Y);
                 Marked = block.SetMark(Marked);
                 gameGrid.ShowMark(((Button)sender), block.Mark);
                 if (gameGrid.MineCount - Marked < 0)
@@ -163,6 +180,7 @@ namespace minesweeper.View
                 if(gameGrid.MineCount - Marked == 0)
                 {
                     EndButton.IsEnabled = true;
+                    gameGrid.CheckRemainingBlocks(blocksList);
                 }
                 else
                 {
@@ -173,6 +191,30 @@ namespace minesweeper.View
         private void OpenRemaining_Click(object sender, RoutedEventArgs e)
         {
             gameGrid.OpenRemainingBlocks(blocksList);
+            if (gameGrid.Won)
+            {
+                Mines.Content = "000";
+                CreateHighScore();
+
+                ShowGameOver(true);
+            }
+            else if (gameGrid.GameOver)
+            {
+                ShowGameOver(false);
+            }
+        }
+
+        private void ShowGameOver(bool option)
+        {
+            if (option)
+            {
+                GameOverLabel.Content = "You won! 😎";
+            }
+            else
+            {
+                GameOverLabel.Content = "You lose... 💀";
+            }
+            
         }
     }
 }

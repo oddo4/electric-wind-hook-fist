@@ -26,6 +26,7 @@
             <Button Content="Intermediate" Margin="0,5" Grid.Row="1" Click="SetDifficulty_Click" Tag="1"/>
             <Button Content="Expert" Margin="0,5" Grid.Row="2" Click="SetDifficulty_Click" Tag="2"/>
         </Grid>
+        <Label x:Name="GameOverLabel" Content="" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="20"/>
         <ListView x:Name="HighScoreListView" HorizontalAlignment="Right" Height="200" VerticalAlignment="Bottom" Width="160">
             <ListView.View>
                 <GridView>
@@ -33,6 +34,5 @@
                 </GridView>
             </ListView.View>
         </ListView>
-
     </Grid>
 </Page>
